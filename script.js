@@ -105,7 +105,6 @@ const rounds = [
                 ]
             }
         ];
-
         let currentRound = 0;
         let scores = [0, 0, 0, 0, 0];
         let timerInterval = null;
@@ -115,13 +114,10 @@ const rounds = [
         let currentFilter = 'all';
         let revealedCount = 0;
         let sidebarVisible = true;
-
-        // Sidebar toggle
         function toggleSidebar() {
             sidebarVisible = !sidebarVisible;
             const sidebar = document.getElementById('sidebar');
             const toggle = document.getElementById('sidebarToggle');
-            
             if (sidebarVisible) {
                 sidebar.classList.remove('hidden');
                 toggle.classList.add('with-sidebar');
@@ -132,24 +128,18 @@ const rounds = [
                 toggle.textContent = '▶';
             }
         }
-
-        // Sound functions
         function toggleSound() {
             soundEnabled = !soundEnabled;
             document.getElementById('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
             showNotification(soundEnabled ? 'Sound Enabled' : 'Sound Muted');
         }
-
         function playSound(type = 'beep') {
             if (!soundEnabled) return;
-            
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
-            
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
-            
             if (type === 'beep') {
                 oscillator.frequency.value = 800;
                 gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
@@ -170,8 +160,6 @@ const rounds = [
                 oscillator.stop(audioContext.currentTime + 0.1);
             }
         }
-
-        // Notification system
         function showNotification(text) {
             const notification = document.getElementById('notification');
             const notificationText = document.getElementById('notificationText');
@@ -181,20 +169,15 @@ const rounds = [
                 notification.classList.remove('show');
             }, 3000);
         }
-
-        // Initialize game
         function init() {
             renderWords();
             updateScores();
             updateStats();
         }
-
-        // Render word cards
         function renderWords() {
             const grid = document.getElementById('wordGrid');
             grid.innerHTML = '';
             revealedCount = 0;
-            
             rounds[currentRound].words.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'word-card';
@@ -210,11 +193,9 @@ const rounds = [
                         </div>
                     </div>
                 `;
-                
                 card.addEventListener('click', function() {
                     const wasFlipped = this.classList.contains('flipped');
                     this.classList.toggle('flipped');
-                    
                     if (!wasFlipped) {
                         revealedCount++;
                         playSound('click');
@@ -223,39 +204,29 @@ const rounds = [
                     }
                     updateStats();
                 });
-                
                 grid.appendChild(card);
             });
-            
             updateStats();
         }
-
-        // Switch rounds
         function switchRound(roundIndex) {
             currentRound = roundIndex;
             document.getElementById('roundTitle').textContent = rounds[roundIndex].title;
-            
             const buttons = document.querySelectorAll('.round-btn');
             buttons.forEach((btn, i) => {
                 btn.classList.toggle('active', i === roundIndex);
             });
-            
             renderWords();
             resetTimer();
             updateStats();
             playSound('success');
             showNotification(`Switched to ${rounds[roundIndex].title}`);
         }
-
-        // Reset round
         function resetRound() {
             renderWords();
             resetTimer();
             playSound('success');
             showNotification('Round Reset');
         }
-
-        // Score management - only points, no correct/streak
         function changeScore(teamIndex, delta) {
             scores[teamIndex] = Math.max(0, scores[teamIndex] + delta);
             
@@ -264,21 +235,17 @@ const rounds = [
             }
             updateScores();
         }
-
         function updateScores() {
             scores.forEach((score, i) => {
                 document.getElementById(`score${i + 1}`).textContent = score;
             });
         }
-
-        // Filter words
         function filterWords(filter) {
             currentFilter = filter;
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
-            
             const cards = document.querySelectorAll('.word-card');
             cards.forEach(card => {
                 if (filter === 'all') {
@@ -291,8 +258,6 @@ const rounds = [
             });
             playSound('click');
         }
-
-        // Flip all cards
         function flipAllCards() {
             const cards = document.querySelectorAll('.word-card');
             cards.forEach((card, index) => {
@@ -307,45 +272,32 @@ const rounds = [
             updateStats();
             showNotification('All Cards Revealed');
         }
-
-        // Shuffle cards
         function shuffleCards() {
             const grid = document.getElementById('wordGrid');
             const cards = Array.from(grid.children);
-            
-            // Shuffle array
             for (let i = cards.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [cards[i], cards[j]] = [cards[j], cards[i]];
             }
-            
-            // Re-append in new order
             grid.innerHTML = '';
             cards.forEach((card, index) => {
                 card.style.animationDelay = `${index * 0.04}s`;
                 card.classList.remove('flipped');
                 grid.appendChild(card);
             });
-            
             revealedCount = 0;
             updateStats();
             playSound('success');
             showNotification('Cards Shuffled');
         }
-
-        // End game - show leaderboard
         function endGame() {
             updateLeaderboard();
             document.getElementById('leaderboardModal').classList.add('show');
             playSound('success');
         }
-
-        // Close leaderboard
         function closeLeaderboard() {
             document.getElementById('leaderboardModal').classList.remove('show');
         }
-
-        // Update statistics
         function updateStats() {
             document.getElementById('totalWords').textContent = rounds[currentRound].words.length;
             document.getElementById('revealedWords').textContent = revealedCount;
@@ -354,8 +306,6 @@ const rounds = [
             document.getElementById('revealedCount').textContent = revealedCount;
             document.getElementById('totalCount').textContent = rounds[currentRound].words.length;
         }
-
-        // Update leaderboard
         function updateLeaderboard() {
             const teamNames = ['Team Alpha', 'Team Beta', 'Team Gamma', 'Team Delta', 'Team Omega'];
             const teamColors = ['var(--team1)', 'var(--team2)', 'var(--team3)', 'var(--team4)', 'var(--team5)'];
@@ -366,10 +316,8 @@ const rounds = [
                 color: teamColors[i],
                 index: i
             })).sort((a, b) => b.score - a.score);
-            
             const leaderboardList = document.getElementById('leaderboardList');
             leaderboardList.innerHTML = '';
-            
             leaderboard.forEach((team, rank) => {
                 const item = document.createElement('div');
                 item.className = `leaderboard-item rank-${rank + 1}`;
@@ -383,8 +331,6 @@ const rounds = [
                 leaderboardList.appendChild(item);
             });
         }
-
-        // Timer functions
         function startTimer() {
             const inputValue = parseInt(document.getElementById('sidebarTimerInput').value);
             if (!timerInterval && inputValue > 0) {
@@ -392,11 +338,9 @@ const rounds = [
                 initialTime = inputValue;
                 document.getElementById('sidebarStartBtn').style.display = 'none';
                 document.getElementById('sidebarPauseBtn').style.display = 'inline-block';
-                
                 timerInterval = setInterval(() => {
                     timeLeft--;
                     updateTimerDisplay();
-                    
                     if (timeLeft <= 0) {
                         pauseTimer();
                         playSound('beep');
@@ -405,37 +349,29 @@ const rounds = [
                 }, 1000);
             }
         }
-
         function pauseTimer() {
             clearInterval(timerInterval);
             timerInterval = null;
             document.getElementById('sidebarStartBtn').style.display = 'inline-block';
             document.getElementById('sidebarPauseBtn').style.display = 'none';
         }
-
         function resetTimer() {
             pauseTimer();
             timeLeft = parseInt(document.getElementById('sidebarTimerInput').value) || 60;
             initialTime = timeLeft;
             updateTimerDisplay();
         }
-
         function updateTimerDisplay() {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
             const display = document.getElementById('sidebarTimerDisplay');
             display.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            
             if (timeLeft <= 10 && timeLeft > 0) {
                 display.classList.add('warning');
             } else {
                 display.classList.remove('warning');
             }
-            
-            // Update progress bar
             const progress = (timeLeft / initialTime) * 100;
             document.getElementById('sidebarTimerProgress').style.width = progress + '%';
         }
-
-        // Initialize on load
         init();
