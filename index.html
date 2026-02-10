@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codenames English PPT Words</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700;800&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+
+    </style>
+</head>
+<body>
+    <div class="bg-layer bg-gradient"></div>
+    <div class="sound-toggle" id="soundToggle" onclick="toggleSound()">
+        🔊
+    </div>
+    <div class="sidebar-toggle with-sidebar" id="sidebarToggle" onclick="toggleSidebar()">
+        ◀
+    </div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">Game Stats</div>
+        <div class="stat-item">
+            <span class="stat-label">Total Words</span>
+            <span class="stat-value" id="totalWords">30</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Revealed</span>
+            <span class="stat-value" id="revealedWords">0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Remaining</span>
+            <span class="stat-value" id="remainingWords">30</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Round</span>
+            <span class="stat-value" id="currentRoundStat">1</span>
+        </div>
+        
+        <div class="sidebar-timer">
+            <div class="sidebar-header" style="margin-bottom: 10px; padding-bottom: 5px;">Timer</div>
+            <div class="sidebar-timer-display" id="sidebarTimerDisplay">00:00</div>
+            <input type="number" class="sidebar-timer-input" id="sidebarTimerInput" value="60" min="1" max="600" placeholder="Seconds">
+            <div class="sidebar-timer-btns">
+                <button class="sidebar-timer-btn start" id="sidebarStartBtn" onclick="startTimer()">▶</button>
+                <button class="sidebar-timer-btn pause" id="sidebarPauseBtn" onclick="pauseTimer()" style="display: none;">⏸</button>
+                <button class="sidebar-timer-btn reset" onclick="resetTimer()">⏹</button>
+            </div>
+            <div class="sidebar-timer-progress">
+                <div class="sidebar-timer-progress-bar" id="sidebarTimerProgress"></div>
+            </div>
+        </div>
+    </div>
+    <div class="notification" id="notification">
+        <div class="notification-text" id="notificationText"></div>
+    </div>
+    <div class="leaderboard-modal" id="leaderboardModal">
+        <div class="leaderboard-content">
+            <h3 class="leaderboard-title">🏆 Final Leaderboard 🏆</h3>
+            <div class="leaderboard-list" id="leaderboardList"></div>
+            <button class="close-leaderboard" onclick="closeLeaderboard()">Close</button>
+        </div>
+    </div>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <h1 class="logo">CODENAMES</h1>
+            </div>
+            <div class="subtitle">Codenames English PPT Words</div>
+            <h2 class="round-title" id="roundTitle">Crime & Legal Terms</h2>
+            <p class="credits">Presented by: Tareq Khalil • Farouk Diab • Mohab Alkammar</p>
+        </header>
+        <div class="main-controls">
+            <div class="control-section">
+                <div class="section-title">Round Selection</div>
+                <div class="round-selector">
+                    <button class="round-btn active" onclick="switchRound(0)">
+                        <span>Round 1<br>Crime & Legal</span>
+                    </button>
+                    <button class="round-btn" onclick="switchRound(1)">
+                        <span>Round 2<br>Surveillance</span>
+                    </button>
+                    <button class="round-btn" onclick="switchRound(2)">
+                        <span>Round 3<br>Social Issues</span>
+                    </button>
+                </div>
+            </div>
+            <div class="control-section">
+                <div class="section-title">Quick Actions</div>
+                <div class="action-panel">
+                    <button class="action-btn reset" onclick="resetRound()">
+                        <span>🔄 Reset Round</span>
+                    </button>
+                    <button class="action-btn flip-all" onclick="flipAllCards()">
+                        <span>👁️ Reveal All</span>
+                    </button>
+                    <button class="action-btn shuffle" onclick="shuffleCards()">
+                        <span>🔀 Shuffle Cards</span>
+                    </button>
+                    <button class="action-btn end-game" onclick="endGame()">
+                        <span>🏁 End Game</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="scoreboard">
+            <div class="team-card">
+                <div class="team-card-content">
+                    <div class="team-badge">1</div>
+                    <div class="team-name">Team Alpha</div>
+                    <div class="score" id="score1">0</div>
+                    <div class="score-controls">
+                        <button class="score-btn plus" onclick="changeScore(0, 1)">
+                            <span>+</span>
+                        </button>
+                        <button class="score-btn minus" onclick="changeScore(0, -1)">
+                            <span>-</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-card-content">
+                    <div class="team-badge">2</div>
+                    <div class="team-name">Team Beta</div>
+                    <div class="score" id="score2">0</div>
+                    <div class="score-controls">
+                        <button class="score-btn plus" onclick="changeScore(1, 1)">
+                            <span>+</span>
+                        </button>
+                        <button class="score-btn minus" onclick="changeScore(1, -1)">
+                            <span>-</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-card-content">
+                    <div class="team-badge">3</div>
+                    <div class="team-name">Team Gamma</div>
+                    <div class="score" id="score3">0</div>
+                    <div class="score-controls">
+                        <button class="score-btn plus" onclick="changeScore(2, 1)">
+                            <span>+</span>
+                        </button>
+                        <button class="score-btn minus" onclick="changeScore(2, -1)">
+                            <span>-</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-card-content">
+                    <div class="team-badge">4</div>
+                    <div class="team-name">Team Delta</div>
+                    <div class="score" id="score4">0</div>
+                    <div class="score-controls">
+                        <button class="score-btn plus" onclick="changeScore(3, 1)">
+                            <span>+</span>
+                        </button>
+                        <button class="score-btn minus" onclick="changeScore(3, -1)">
+                            <span>-</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-card-content">
+                    <div class="team-badge">5</div>
+                    <div class="team-name">Team Omega</div>
+                    <div class="score" id="score5">0</div>
+                    <div class="score-controls">
+                        <button class="score-btn plus" onclick="changeScore(4, 1)">
+                            <span>+</span>
+                        </button>
+                        <button class="score-btn minus" onclick="changeScore(4, -1)">
+                            <span>-</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="word-grid-container">
+            <div class="grid-controls">
+                <div class="grid-info">
+                    Words Revealed: <span id="revealedCount">0</span> / <span id="totalCount">30</span>
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterWords('all')">All</button>
+                    <button class="filter-btn" onclick="filterWords('revealed')">Revealed</button>
+                    <button class="filter-btn" onclick="filterWords('hidden')">Hidden</button>
+                </div>
+            </div>
+            <div class="word-grid" id="wordGrid"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
