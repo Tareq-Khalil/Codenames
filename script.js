@@ -1,6 +1,6 @@
 const rounds = [
             {
-                title: "Crime & Legal Terms",
+                title: "Crime & Legal Terms ",
                 words: [
                     { word: "jaywalking", def: "crossing the street illegally" },
                     { word: "manslaughter", def: "unintentional killing" },
@@ -35,7 +35,7 @@ const rounds = [
                 ]
             },
             {
-                title: "Surveillance & Privacy",
+                title: "Surveillance & Privacy ",
                 words: [
                     { word: "invasion of privacy", def: "interfering without permission" },
                     { word: "anonymity", def: "keeping identity secret" },
@@ -70,7 +70,7 @@ const rounds = [
                 ]
             },
             {
-                title: "Social Issues & General Advanced",
+                title: "Social Issues & General Advanced ",
                 words: [
                     { word: "drought", def: "long period without rain" },
                     { word: "shelter", def: "building for homeless people" },
@@ -375,3 +375,4 @@ const rounds = [
             document.getElementById('sidebarTimerProgress').style.width = progress + '%';
         }
         init();
+
